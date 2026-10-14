@@ -1,20 +1,59 @@
+
 name: Verify participant release
-on: [push, pull_request]
+
+on:
+  push:
+  pull_request:
+
 permissions:
   contents: read
+
 jobs:
   check:
+    name: Validate Python ${{ matrix.python }}
     runs-on: ubuntu-latest
+
     strategy:
+      fail-fast: false
       matrix:
-        python: ['3.10', '3.12']
+        python: ["3.10", "3.12"]
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
-      - run: python -m unittest -v
-      - run: python verify_data.py
-      - run: python evaluate.py --seeds 101 --output results/smoke.json
-      - run: docker build -t sequential-policy:ci .
-      - run: python evaluate.py --image sequential-policy:ci --seeds 101 --output results/container.json
+
+      - name: Run unit tests
+        run: python -m unittest -v
+
+      - name: Verify dataset
+        run: python verify_data.py
+
+      - name: Run evaluator smoke test
+        run: |
+          python evaluate.py \
+            --seeds 101 \
+            --output results/smoke.json
+
+      - name: Build submission Docker image
+        run: docker build -t sequential-policy:ci .
+
+      - name: Run isolated container evaluation
+        run: |
+          python evaluate.py \
+            --image sequential-policy:ci \
+            --seeds 101 \
+            --output results/container.json
+
+      - name: Upload container evaluation result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: container-check-python-${{ matrix.python }}
+          path: results/container.json
+          if-no-files-found: warn
+          retention-days: 7
