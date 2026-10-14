@@ -51,7 +51,9 @@ def episode(job):
     return {'policy': name, 'variant': variant, 'seed': seed, 'valid': valid, 'error': err,
             'msmi_per_100': 100 * m['mutual_second_meeting_intention'] / n,
             'mutual_per_100': 100 * m['mutual_acceptances'] / n, 'coverage': len(covered) / n,
-            'ask_cost': m['ask_cost'], 'intros': m['assignments'], 'mean_wait_days': st.mean(waits) if waits else None,
+            'ask_cost': m['ask_cost'], 'intros': m['assignments'], 'mutual_acceptances': m['mutual_acceptances'],
+            'dates': m['dates'], 'msmi_count': m['mutual_second_meeting_intention'], 'missing_feedback': m['missing_feedback'],
+            'arrived': len(arrived), 'unserved_fraction': 1 - len(covered) / n, 'mean_wait_days': st.mean(waits) if waits else None,
             'max_call_seconds': max(calls) if calls else 0, 'episode_seconds': time.time() - t0}
 
 def done_keys(path):
@@ -86,6 +88,10 @@ def summary(a):
         waits = [x['mean_wait_days'] for rs in per.values() for x in rs if x['mean_wait_days'] is not None]
         inv = sum(not x['valid'] for rs in per.values() for x in rs)
         print(f"{p} | {mean('msmi_per_100'):.3f} | {mean('mutual_per_100'):.2f} | {mean('coverage'):.2f} | {mean('ask_cost'):.0f} | {st.mean(waits) if waits else float('nan'):.1f} | {inv} | {sum(len(r) for r in per.values())}")
+        if a.funnel:
+            tot = lambda k: sum(x[k] for rs in per.values() for x in rs) / max(1, sum(len(rs) for rs in per.values()))
+            print('   funnel per episode: intros %.1f mutual %.1f dates %.1f msmi %.2f missing_feedback %.1f unserved %.2f max_call_s %.2f' % (
+                tot('intros'), tot('mutual_acceptances'), tot('dates'), tot('msmi_count'), tot('missing_feedback'), tot('unserved_fraction'), max(x['max_call_seconds'] for rs in per.values() for x in rs)))
         for v, rs in per.items():
             print(f"   {v:12s} msmi {st.mean(x['msmi_per_100'] for x in rs):.3f} mutual {st.mean(x['mutual_per_100'] for x in rs):.2f} cov {st.mean(x['coverage'] for x in rs):.2f} n={len(rs)}")
 
@@ -93,5 +99,5 @@ if __name__ == '__main__':
     ap = argparse.ArgumentParser(); sub = ap.add_subparsers(dest='cmd', required=True)
     r = sub.add_parser('run'); r.add_argument('--policies', default='greedy'); r.add_argument('--seeds', default='201-210')
     r.add_argument('--variants', default='all'); r.add_argument('--out', default='results/exp.jsonl'); r.add_argument('--workers', type=int, default=1)
-    s = sub.add_parser('summary'); s.add_argument('--out', default='results/exp.jsonl')
+    s = sub.add_parser('summary'); s.add_argument('--out', default='results/exp.jsonl'); s.add_argument('--funnel', action='store_true')
     a = ap.parse_args(); run(a) if a.cmd == 'run' else summary(a)
