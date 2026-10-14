@@ -1,6 +1,6 @@
 FROM python:3.12.7-slim
 WORKDIR /app
-COPY kit.py policy.py ./
+COPY kit.py policy.py indicart.py ./
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 USER 65534:65534
-ENTRYPOINT ["python", "policy.py"]
+ENTRYPOINT ["python", "indicart.py"]
