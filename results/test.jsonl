@@ -1,1 +1,0 @@
-{"policy": "greedy", "variant": "development", "seed": 201, "valid": true, "error": null, "msmi_per_100": 0.0, "mutual_per_100": 6.0, "coverage": 0.285, "ask_cost": 183, "intros": 59, "mean_wait_days": 5.684210526315789, "max_call_seconds": 0.2176361083984375, "episode_seconds": 9.605872631072998}
