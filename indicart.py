@@ -1,13 +1,3 @@
-"""IndicArt policy v2 (submission entry point). Standard library only; reads only the JSON request.
-
-Ask phase : (1) spend up to SOFT_UNITS/day on `relationship_goal` for members who already have a feasible
-            partner (1 unit each); (2) spend the rest on `constraints` bundles for members who would unlock
-            the most potential partners.
-Match phase: score feasible pairs (goal agreement weighted highest, weights taken from the public training
-            pools), take non-overlapping pairs greedily, then re-validate every pair before returning it.
-Safety    : any internal error returns an empty (valid) action. The --baseline flag is accepted and ignored
-            so the official local runner can launch this file; baselines live in policy.py.
-"""
 import argparse, itertools, json, sys
 from kit import HARD, eligibility
 

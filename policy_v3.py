@@ -1,4 +1,3 @@
-"""v3 = v2 plus a filter: do not introduce pairs whose known relationship goals disagree (hold them back)."""
 import itertools, json, sys
 import policy_v2
 from kit import eligibility

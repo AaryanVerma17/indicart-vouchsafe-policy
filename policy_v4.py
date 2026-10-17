@@ -1,4 +1,3 @@
-"""v4 = indicart (v2) + member-level propensity learned online from observable feedback."""
 import itertools, json, sys
 import indicart
 from kit import eligibility

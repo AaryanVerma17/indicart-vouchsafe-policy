@@ -1,4 +1,3 @@
-"""Sensitivity: reserve up to 12 units/day for goal asks."""
 import json, sys
 import policy_v2
 policy_v2.SOFT_UNITS = 12

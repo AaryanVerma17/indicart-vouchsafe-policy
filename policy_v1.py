@@ -1,4 +1,3 @@
-"""IndicArt v1: targeted clarification + soft-agreement scoring. Stdlib only; no hidden state."""
 import argparse, itertools, json, sys
 from kit import HARD, SOFT, eligibility
 

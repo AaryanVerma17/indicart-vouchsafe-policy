@@ -1,4 +1,3 @@
-"""Public evaluation harness. Local subprocess mode is for trusted code only."""
 import argparse
 import collections
 import hashlib

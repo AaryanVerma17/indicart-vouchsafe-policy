@@ -1,5 +1,3 @@
-"""IndicArt v2: v1 targeted constraint asks + cheap relationship_goal asks + goal-weighted scoring.
-Weights justified by training pools (analysis: goal agreement 0.65 vs 0.44 acceptance). Stdlib only."""
 import itertools, json, sys
 from kit import HARD, eligibility
 from policy_v1 import _past, _hard_declined, pair_score

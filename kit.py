@@ -1,6 +1,3 @@
-"""Synthetic reciprocal matching development kit. Python >=3.10, standard library only.
-All behaviour is invented. Never use development probabilities as real-world estimates.
-"""
 import copy, hashlib, itertools, json, math, random, uuid
 from pathlib import Path
 

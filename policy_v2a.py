@@ -1,4 +1,3 @@
-"""Ablation: goal asks (v2) but the starter's pair scoring."""
 import json, sys
 import policy_v2
 from kit import baseline_match
